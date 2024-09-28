@@ -2,16 +2,16 @@
 
 ## Members
 
-1. Bognot, Sean Rylle Maninang
-2. Dizon, Steven Louie Dejesus
-3. Mendez, Manuel Jr. Estrella
-4. Sarmiento, Kiyoharu
-5. Tayag, Rijel Siron
-6. Manalastas, John Paul Cataquian
+1. Bognot, Sean Rylle Maninang - [@ase.nse](https://gitlab.com/ase.nse)
+2. Dizon, Steven Louie Dejesus - [@Akiben](https://gitlab.com/Akiben)
+3. Mendez, Manuel Jr. Estrella - [@mjmendez29](https://gitlab.com/mjmendez29)
+4. Sarmiento, Kiyoharu - [@klst.xii](https://gitlab.com/klst.xii)
+5. Tayag, Rijel Siron - [@rijeltayag](https://gitlab.com/rijeltayag)
+6. Manalastas, John Paul Cataquian - [@jpmnlsts](https://gitlab.com/jpmnlsts)
 
 ## Features to be implemented
 
-- [ ] AI travel plan
-- [ ] Hotel booking
-- [ ] Daily travel plan reminder
-- [ ] Navigation
+- ☑️ AI travel plan
+- ☑️ Hotel booking
+- ☑️ Daily travel plan reminder
+- ☑️ Navigation
