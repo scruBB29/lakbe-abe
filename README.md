@@ -11,7 +11,7 @@
 
 ## Features to be implemented
 
-- ☑️ AI travel plan
-- ☑️ Hotel booking
-- ☑️ Daily travel plan reminder
-- ☑️ Navigation
+- [ ] AI travel plan
+- [ ] Hotel booking
+- [ ] Daily travel plan reminder
+- [ ] Navigation
