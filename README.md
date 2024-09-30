@@ -15,6 +15,6 @@ Travel planning and booking application specifically tailored for Pampanga, Phil
 
 - [ ] **AI travel plan** (September 30 - October 7)
 - [ ] **Hotel booking** (October 7 - October 14)
-- [ ] **Daily travel plan reminder** - (October 14 - October 21)
-- [ ] **Navigation** - (October 21 - October 28)
+- [ ] **Daily travel plan reminder** (October 14 - October 21)
+- [ ] **Navigation** (October 21 - October 28)
    
