@@ -13,11 +13,8 @@ Travel planning and booking application specifically tailored for Pampanga, Phil
 
 ## Features to be implemented
 
-- [ ] **AI travel plan**
-    - September 30 - October 7 (Week 1)
-- [ ] **Hotel booking**
-    - October 7 - October 14 (Week 2)
-- [ ] **Daily travel plan reminder**
-    - October 14 - October 21 (Week 3)
-- [ ] **Navigation**
-    - October 21 - 28 (Week 4)
+- [ ] **AI travel plan** - September 30 - October 7 (Week 1)
+- [ ] **Hotel booking** - October 7 - October 14 (Week 2)
+- [ ] **Daily travel plan reminder** - October 14 - October 21 (Week 3)
+- [ ] **Navigation** - October 21 - 28 (Week 4)
+   
