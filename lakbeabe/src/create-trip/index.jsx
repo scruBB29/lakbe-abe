@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { chatSession } from "@/service/AIModal";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,9 @@ import {
 } from "@/components/ui/dialog"
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom'
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/service/firebaseConfig';
 
 // Create Trip Page
 function CreateTrip() {
@@ -27,6 +31,10 @@ function CreateTrip() {
 
   const [formData, setFormData] = useState([]);
   const [openDialog, setOpenDialog] = useState();
+
+  const [loading,setLoading]=useState(false);
+
+  const navigate=useNavigate();
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -61,7 +69,7 @@ function CreateTrip() {
       toast("Please fill all details");
       return;
     }
-
+    setLoading(true);
     const FINAL_PROMPT = AI_PROMPT.replace(
       "{location}",
       formData?.location?.label
@@ -71,12 +79,30 @@ function CreateTrip() {
       .replace("{budget}", formData?.budget)
       .replace("{totalDays}", formData?.noOfDays);
 
-    console.log(FINAL_PROMPT);
-
     const result = await chatSession.sendMessage(FINAL_PROMPT);
 
-    console.log(result?.response?.text());
+    console.log("--",result?.response?.text());
+    setLoading(false);
+    SaveAiTrip(result?.response?.text())
+
   };
+
+  const SaveAiTrip=async(TripData)=>{
+
+    setLoading(true);
+    const user=JSON.parse(localStorage.getItem('user'));
+    const docId=Date.now().toString()
+
+    await setDoc(doc(db, "AITrips", docId), {
+        userSelection:formData,
+        tripData: JSON.parse(TripData),
+        userEmail:user?.email,
+        id:docId
+
+    });
+    setLoading(false);
+    navigate('/view-trip/'+docId)
+  }
 
   const GetUserProfile = (tokenInfo) => {
     axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?acess_token=${tokenInfo?.access_token}`, {
@@ -175,7 +201,13 @@ function CreateTrip() {
         </div>
       </div>
       <div className="my-10 justify-end flex">
-        <Button onClick={OnGenerateTrip}>Generate Trip</Button>
+        <Button 
+            disabled={loading}
+            onClick={OnGenerateTrip}>
+            {loading?
+            <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin " />: 'Generate Trip'
+            }
+        </Button>
       </div>
 
      {/* CONTAINER OF SIGN IN GOOGLE  */}
@@ -187,13 +219,13 @@ function CreateTrip() {
               <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
               <p>Sign in to the App with Google authentication securely</p>
 
-              <Button
+               <Button
                 onClick={login}
-                className="w-full mt-5 flex gap-4 items-center"
-              >
-                <FcGoogle className="h-7 w-7" />
-                Sign In With Google
-              </Button>
+                className="w-full mt-5 flex gap-4 items-center">
+                 <FcGoogle className="h-7 w-7" />
+                 Sign In With Google
+               </Button>
+              
             </DialogDescription>
           </DialogHeader>
           <button
