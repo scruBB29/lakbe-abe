@@ -1,9 +1,9 @@
-import { React, useState, useEffect } from "react";
-import InfoSection from "../components/InfoSection";
-import { useParams } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/service/firebaseConfig";
-import Hotels from "../components/Hotels";
+import { React, useState, useEffect} from 'react'
+import InfoSection from '../components/InfoSection'
+import { useParams } from 'react-router-dom'
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/service/firebaseConfig';
+import Hotels from '../components/Hotels';
 
 function Viewtrip() {
   const { tripId } = useParams();
@@ -26,19 +26,23 @@ function Viewtrip() {
       console.log("No Such Document");
       toast("No trip Found!");
     }
-  };
-
-  return (
-    <div className="p-10 md:px-20 lg:px-44 xl:px-56">
-      {/* Information Section */}
-      <InfoSection trip={trip} />
-      {/* Recommended Hotels */}
-      <Hotels trip={trip} />
-      {/* Daily plan Section */}
-
-      {/* Footer */}
-    </div>
-  );
 }
 
-export default Viewtrip;
+    return (
+        <div className='p-10 md:px-20 lg:px-44 xl:px-56'>
+            {/* information Section */}
+                <InfoSection trip={trip}/>
+            {/* Recommended Hotels */}
+                <Hotels trip={trip} />
+            {/* Daily plan Section */}
+
+            {/* Footer */}
+
+
+        </div>
+
+    )
+}
+
+
+export default Viewtrip
