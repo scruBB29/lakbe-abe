@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig';
 import Hotels from '../components/Hotels';
+import PlacesToVisit from '../components/PlacesToVisit';
+import Footer from '../components/Footer';
 
 function Viewtrip() {
   const { tripId } = useParams();
@@ -35,9 +37,9 @@ function Viewtrip() {
             {/* Recommended Hotels */}
                 <Hotels trip={trip} />
             {/* Daily plan Section */}
-
+                <PlacesToVisit trip={trip} />
             {/* Footer */}
-
+                <Footer trip={trip} />
 
         </div>
 
