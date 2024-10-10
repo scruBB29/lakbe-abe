@@ -1,12 +1,34 @@
 import { Button } from "@/components/ui/button";
+import { GetPlaceDetails } from "@/service/GlobalApi";
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { IoIosSend } from "react-icons/io";
+import { PHOTO_REF_URL } from "@/service/GlobalApi";
+
 
 function InfoSection({ trip }) {
+
+  const [photoUrl,setPhotoUrl]=useState();
+  useEffect(()=>{
+    trip&&GetPlacePhoto();
+  },[trip])
+
+  const GetPlacePhoto=async()=>{
+    const data={
+      textQuery:trip?.userSelection?.location?.label
+    }
+    const result=await GetPlaceDetails(data).then(resp=>{
+      console.log(resp.data.places[0].photos[3].name);
+
+      const PhotoUrl=PHOTO_REF_URL.replace('{NAME}',resp.data.places[0].photos[1].name);
+      setPhotoUrl(PhotoUrl);
+    })
+  }
   return (
     <div>
       <img
-        src="/holder.svg"
+        src={photoUrl?photoUrl:'/pampanga.jpg'}
         className="h-[340px] w-full object-cover rounded"
       />
 
