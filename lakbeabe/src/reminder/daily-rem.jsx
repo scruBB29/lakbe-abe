@@ -66,4 +66,3 @@ const TravelReminder = () => {
 };
 
 export default TravelReminder;
-// prototype (not yet final)
