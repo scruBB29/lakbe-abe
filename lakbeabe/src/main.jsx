@@ -9,6 +9,7 @@ import Header from './components/ui/custom/Header.jsx'
 import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Viewtrip from './view-trip/[tripId]/index.jsx'
+import Hotelbooking from './book-hotel/Hotelbooking.jsx'
 
 // LakbeAbe web page pathways
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path:'/view-trip/:tripId',
     element: <Viewtrip/>
+  },
+  {
+    path:'/Hotelbooking',
+    element: <Hotelbooking/>
   },
 ])
 
