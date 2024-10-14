@@ -9,7 +9,7 @@ import Header from './components/ui/custom/Header.jsx'
 import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Viewtrip from './view-trip/[tripId]/index.jsx'
-import Hotelbooking from './booking/Booking-form.jsx';
+import HotelBooking from './book-hotel/Hotelbooking.jsx'
 import MyTrips from './my-trips/index.jsx'
 
 
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
   },
   {
     path:'/Hotelbooking',
-    element: <Hotelbooking/>
+    element: <HotelBooking/>
   },
 ])
 
