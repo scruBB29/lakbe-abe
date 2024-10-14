@@ -54,18 +54,53 @@ function Header() {
   return (
     <div className="p-2 shadow-sm flex justify-between items-center px-5">
       <a href="/">
-      <img src="/LakbeAbe.svg" className="cursor-pointer" />
+        <img src="/LakbeAbe.svg" className="cursor-pointer" />
       </a>
       {/* <Button><img src='/LakbeAbe.svg'/></Button> */}
       <div>
-        {/* <Button>Book Hotel</Button> */}
-        &nbsp;
         {user ? (
           <div className="flex items-center gap-3">
+            <a href="/Hotelbooking">
+              <button         style={{
+          backgroundColor: '#FFEE8C',
+          color: '#000000',
+          border: '2px solid #FFEE8C', 
+          borderRadius: '25px', 
+          padding: '10px 20px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          transition: 'background-color 0.3s, color 0.3s', 
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = '#F4c430'; 
+          e.target.style.color = 'black';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = '#FFEE8C'; 
+        }}>
+                Book Hotel
+              </button>
+            </a>
             <a href="/my-trips">
-            <Button variant="outline" className="rounded-full">
-              My Trips
-            </Button>
+              <Button style={{
+          backgroundColor: '#FFEE8C', 
+          color: '#000000', 
+          border: '2px solid #FFEE8C', 
+          borderRadius: '25px', 
+          padding: '10px 20px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          transition: 'background-color 0.3s, color 0.3s', 
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = '#F4c430'; 
+          e.target.style.color = 'black'; 
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = '#FFEE8C'; 
+        }}>
+                My Trips
+              </Button>
             </a>
             <Popover>
               <PopoverTrigger className="bg-transparent rounded-full h-[35px] w-[35px] px-0 py-0 outline-none :focus:outline-none">
@@ -80,7 +115,7 @@ function Header() {
                   onClick={() => {
                     googleLogout();
                     localStorage.clear();
-                    window.location.href = '/';
+                    window.location.href = "/";
                   }}
                 >
                   Logout
@@ -89,7 +124,13 @@ function Header() {
             </Popover>
           </div>
         ) : (
-          <Button onClick={() => setOpenDialog(true)}>Sign In</Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => setOpenDialog(true)}
+          >
+            Sign In
+          </Button>
         )}
         <Dialog open={openDialog}>
           <DialogContent>
