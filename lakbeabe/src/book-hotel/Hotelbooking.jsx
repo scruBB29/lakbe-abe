@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './HotelBooking.css'; // Add your styles here
+import { db } from '@/service/firebaseConfig'; // Adjust this import based on your project structure
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 
 function HotelBooking() {
     const location = useLocation();
@@ -27,10 +29,30 @@ function HotelBooking() {
 
     const totalPrice = calculateTotalPrice(); // Calculate total price
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (startDate && endDate) {
-            alert(`Booking from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()} for ${numberOfGuests} guests. Total Price: ₱${totalPrice.toLocaleString()}`);
+            const user = JSON.parse(localStorage.getItem('user')); // Retrieve user info from local storage
+            
+            // Construct booking data without the picture URL
+            const bookingData = {
+                hotelName: hotel?.hotelName,
+                checkInDate: startDate.toISOString(),
+                checkOutDate: endDate.toISOString(),
+                numberOfGuests,
+                totalPrice,
+                userEmail: user?.email, // Get current user's email without picture URL
+                userId: user?.id // Optionally include other user info as needed
+            };
+
+            try {
+                // Save booking details to Firestore under the user's document
+                await setDoc(doc(db, "UserBookings", bookingData.userEmail), bookingData);
+                alert(`Booking confirmed from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()} for ${numberOfGuests} guests. Total Price: ₱${totalPrice.toLocaleString()}`);
+            } catch (error) {
+                console.error("Error saving booking:", error);
+                alert("Failed to save booking. Please try again.");
+            }
         } else {
             alert('Please select both start and end dates.');
         }
