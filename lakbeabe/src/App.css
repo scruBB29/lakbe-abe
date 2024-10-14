@@ -39,7 +39,10 @@
 }
 
 .bg-image {
+  margin: 0;
   background-image: url('./public/LakbeAbe_bg.png');
-  height: 87vh; /* Adjust height as needed */
+  height: 100vh; /* Adjust height as needed */
   background-size: cover; /* Cover the entire area */
+  background-size: cover; /* Cover the entire area */
+  background-position: center; /* Center the image */
 }

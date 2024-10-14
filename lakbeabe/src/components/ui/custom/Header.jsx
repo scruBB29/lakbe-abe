@@ -52,7 +52,7 @@ function Header() {
   };
 
   return (
-    <div className="p-2 shadow-sm flex justify-between items-center px-5">
+    <div className="p-2 shadow-sm flex justify-between items-center px-5 ">
       <a href="/">
         <img src="/LakbeAbe.svg" className="cursor-pointer" />
       </a>
