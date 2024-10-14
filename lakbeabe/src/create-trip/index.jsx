@@ -28,7 +28,6 @@ import { db } from "@/service/firebaseConfig";
 // Create Trip Page
 function CreateTrip() {
   const [place, setPlace] = useState();
-
   const [formData, setFormData] = useState([]);
   const [openDialog, setOpenDialog] = useState();
 
@@ -156,7 +155,13 @@ function CreateTrip() {
           <Input
             placeholder={"Ex.3"}
             type="number"
+            onInput={(e) => {
+              if (e.target.value < 1) {
+                e.target.value = ""; // Clear the input if less than 1
+              }
+            }}
             onChange={(e) => handleInputChange("noOfDays", e.target.value)}
+            min="1"
           />
         </div>
       </div>
