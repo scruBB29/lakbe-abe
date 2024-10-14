@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Hero from './components/ui/custom/Hero.jsx'
 import App from './App.jsx'
 import CreateTrip from './create-trip/index.jsx'
@@ -10,6 +10,14 @@ import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Viewtrip from './view-trip/[tripId]/index.jsx'
 import Hotelbooking from './book-hotel/Hotelbooking.jsx'
+import MyTrips from './my-trips/index.jsx'
+
+
+// Simple authentication check
+const isAuthenticated = () => {
+  return !!localStorage.getItem('user'); // Check local storage for a user item
+};
+
 
 // LakbeAbe web page pathways
 const router = createBrowserRouter([
@@ -23,7 +31,11 @@ const router = createBrowserRouter([
   },
   {
     path:'/view-trip/:tripId',
-    element: <Viewtrip/>
+    element: isAuthenticated() ? <Viewtrip/> : <Navigate to="/" />,
+  },
+  {
+    path:'/my-trips',
+    element: isAuthenticated() ? <MyTrips/> : <Navigate to="/" />,
   },
   {
     path:'/Hotelbooking',
