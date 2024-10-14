@@ -53,17 +53,20 @@ function Header() {
 
   return (
     <div className="p-2 shadow-sm flex justify-between items-center px-5">
-      <img src="/LakbeAbe.svg" />
+      <a href="/">
+      <img src="/LakbeAbe.svg" className="cursor-pointer" />
+      </a>
       {/* <Button><img src='/LakbeAbe.svg'/></Button> */}
       <div>
         {/* <Button>Book Hotel</Button> */}
         &nbsp;
         {user ? (
           <div className="flex items-center gap-3">
+            <a href="/my-trips">
             <Button variant="outline" className="rounded-full">
               My Trips
             </Button>
-
+            </a>
             <Popover>
               <PopoverTrigger className="bg-transparent rounded-full h-[35px] w-[35px] px-0 py-0 outline-none :focus:outline-none">
                 <img
@@ -77,7 +80,7 @@ function Header() {
                   onClick={() => {
                     googleLogout();
                     localStorage.clear();
-                    window.location.reload();
+                    window.location.href = '/';
                   }}
                 >
                   Logout
