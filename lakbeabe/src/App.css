@@ -37,3 +37,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.bg-image {
+  background-image: url('./public/LakbeAbe_bg.png');
+  height: 87vh; /* Adjust height as needed */
+  background-size: cover; /* Cover the entire area */
+}
