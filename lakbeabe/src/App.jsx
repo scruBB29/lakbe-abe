@@ -15,7 +15,6 @@ function App() {
     <div className="bg-image">
       {/* Hero */}
       <Hero />
-      <Hotelbooking />
     </div>
   )
 }
