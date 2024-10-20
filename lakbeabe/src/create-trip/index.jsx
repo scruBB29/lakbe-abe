@@ -35,12 +35,27 @@ function CreateTrip() {
   // Predefined locations in Pampanga
   const predefinedLocations = [
     { label: "Angeles City", value: "Angeles City" },
-    { label: "San Fernando", value: "San Fernando" },
-    { label: "Mabalacat", value: "Mabalacat" },
+    { label: "Apalit", value: "Apalit" },
+    { label: "Arayat", value: "Arayat" },
     { label: "Bacolor", value: "Bacolor" },
+    { label: "Candaba", value: "Candaba" },
+    { label: "Floridablanca", value: "Floridablanca" },
     { label: "Guagua", value: "Guagua" },
-    { label: "Sasmuan", value: "Sasmuan" },
+    { label: "Lubao", value: "Lubao" },
+    { label: "Mabalacat", value: "Mabalacat" },
+    { label: "Macabebe", value: "Macabebe" },
+    { label: "Magalang", value: "Magalang" },
+    { label: "Masantol", value: "Masantol" },
+    { label: "Mexico, Pampanga", value: "Mexico, Pampanga" },
+    { label: "Minalin", value: "Minalin" },
     { label: "Porac", value: "Porac" },
+    { label: "San Fernando", value: "San Fernando" },
+    { label: "San Luis", value: "San Luis" },
+    { label: "San Simon", value: "San Simon" },
+    { label: "Santa Ana", value: "Santa Ana" },
+    { label: "Santa Rita", value: "Santa Rita" },
+    { label: "Santo Tomas, Pampanga", value: "Santo Tomas, Pampanga" },
+    { label: "Sasmuan", value: "Sasmuan" },
   ];
 
   const handleInputChange = (name, value) => {
