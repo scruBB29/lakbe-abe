@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import './HotelBooking.css'; // Add your styles here
+import './Hotelbooking.css'; // Add your styles here
 import { db } from '@/service/firebaseConfig'; // Adjust this import based on your project structure
 import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 
