@@ -14,7 +14,7 @@ function HotelCardItem({ hotel }) {
             textQuery: hotel?.hotelName
         };
         const result = await GetPlaceDetails(data).then(resp => {
-            const PhotoUrl = PHOTO_REF_URL.replace('{NAME}', resp.data.places[0].photos[1].name);
+            const PhotoUrl = PHOTO_REF_URL.replace('{NAME}', resp.data.places[0].photos[0].name);
             setPhotoUrl(PhotoUrl);
         });
     };
