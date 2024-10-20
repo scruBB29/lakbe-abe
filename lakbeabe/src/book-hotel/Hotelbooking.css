@@ -1,14 +1,18 @@
 .booking-container {
-    position: absolute; /* Use absolute positioning */
-    top: 50%; /* Center vertically */
-    right: 20px; /* Position it towards the right */
-    transform: translateY(-50%); /* Adjust vertical centering */
-    width: 300px; /* Set a fixed width for the container */
-    padding: 20px; /* Add some padding */
-    background-color: white; /* Optional: Add a background color */
-    border-radius: 8px; /* Optional: Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+    display: flex;
+    flex-direction: row; /* Use column direction for better stacking */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    position: relative;
+    width: 100%; /* Make it responsive */
+    max-width: 1000px; /* Set a maximum width */
+    padding: 50px; /* Add padding */
+    background-color: white; /* Background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    margin: 0 auto; /* Center the container on the page */
 }
+
 
 .date-picker, .guest-count {
     margin-bottom: 15px; /* Space between fields */
@@ -24,6 +28,11 @@
 .transparent-datepicker:focus {
     outline: none; /* Remove outline on focus */
     border-color: #007bff; /* Optional: Change border color on focus */
+}
+
+
+.occupied {
+    cursor: not-allowed; /* This indicates that the date is not selectable */
 }
 
 /* Additional styles can be added as necessary */
