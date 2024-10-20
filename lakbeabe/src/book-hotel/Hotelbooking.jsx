@@ -16,11 +16,23 @@ function HotelBooking() {
   const [numberOfAdults, setNumberOfAdults] = useState(1);
   const [numberOfChildren, setNumberOfChildren] = useState(0);
   const [bookedDates, setBookedDates] = useState([]); // State for booked dates
+  const [bedType, setBedType] = useState(""); // State for bed type
+
+  // Updated bed types array with Double-Double bed included
+  const bedTypes = [
+    "King size",
+    "Queen size",
+    "Double bed",
+    "Triple bed",
+    "Single bed",
+    "Double-Double bed", // New option added here
+  ];
 
   const [photoUrl, setPhotoUrl] = useState();
 
   useEffect(() => {
     hotel && GetPlacePhoto();
+    fetchBookedDates();
   }, [hotel]);
 
   const GetPlacePhoto = async () => {
@@ -50,10 +62,6 @@ function HotelBooking() {
   };
 
   const totalPrice = calculateTotalPrice();
-
-  useEffect(() => {
-    fetchBookedDates();
-  }, [hotel]);
 
   const fetchBookedDates = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -87,6 +95,33 @@ function HotelBooking() {
     );
   };
 
+  // Adjust guest count based on selected bed type
+  const adjustGuestCountByBedType = (selectedBedType) => {
+    switch (selectedBedType) {
+      case "King size":
+      case "Queen size":
+      case "Double bed":
+        setNumberOfAdults(2);
+        setNumberOfChildren(0);
+        break;
+      case "Triple bed":
+        setNumberOfAdults(3);
+        setNumberOfChildren(0);
+        break;
+      case "Single bed":
+        setNumberOfAdults(1);
+        setNumberOfChildren(0);
+        break;
+      case "Double-Double bed": // New logic for Double-Double bed
+        setNumberOfAdults(4); // Assuming it can accommodate up to 4 adults
+        setNumberOfChildren(0); // Adjust as needed
+        break;
+      default:
+        break;
+    }
+    setBedType(selectedBedType);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (startDate && endDate) {
@@ -102,6 +137,7 @@ function HotelBooking() {
         userEmail: user?.email,
         userId: user?.id,
         createdAt: new Date().toISOString(),
+        bedType, // Include selected bed type in booking data
       };
 
       try {
@@ -156,13 +192,6 @@ function HotelBooking() {
               dateFormat="MMMM d, yyyy"
               placeholderText="Select start date"
               filterDate={(date) => !isDateBooked(date)} // Disable booked dates
-              renderDayContents={(day, date) => {
-                return (
-                  <div className={isDateBooked(date) ? "occupied" : ""}>
-                    {day}
-                  </div>
-                );
-              }}
               className="transparent-datepicker"
             />
           </div>
@@ -178,15 +207,25 @@ function HotelBooking() {
               dateFormat="MMMM d, yyyy"
               placeholderText="Select end date"
               filterDate={(date) => !isDateBooked(date)} // Disable booked dates
-              renderDayContents={(day, date) => {
-                return (
-                  <div className={isDateBooked(date) ? "occupied" : ""}>
-                    {day}
-                  </div>
-                );
-              }}
               className="transparent-datepicker"
             />
+          </div>
+
+          {/* Bed Type Section */}
+          <div className="bed-type">
+            <label>Bed Type:</label>
+            <select
+              value={bedType}
+              onChange={(e) => adjustGuestCountByBedType(e.target.value)}
+              className="border border-gray-300 bg-transparent rounded-md p-2"
+            >
+              <option value="" disabled>Select a bed type</option>
+              {bedTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Guest Count Section */}
