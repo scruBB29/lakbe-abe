@@ -28,6 +28,7 @@ function CreateTrip() {
   const [place, setPlace] = useState(null);
   const [formData, setFormData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false); // Track checkbox state
   const [loading, setLoading] = useState(false);
   const [notFoundMessage, setNotFoundMessage] = useState("");
   const navigate = useNavigate();
@@ -278,8 +279,28 @@ function CreateTrip() {
                 <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
                 <p>Sign in to the App with Google authentication securely</p>
 
+                {/* Optional Agreement Checkbox */}
+                <div className="mt-4 flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="agreement"
+                    checked={isAgreed}
+                    onChange={(e) => setIsAgreed(e.target.checked)}
+                    className="mt-1"
+                  />
+                  <label htmlFor="agreement" className="text-sm">
+                    I agree to receive daily travel plan reminders (optional)
+                  </label>
+                </div>
+                
                 <Button
-                  onClick={login}
+                  onClick={() => {
+                    if (isAgreed) {
+                      console.log("User agreed to receive travel reminders.");
+                      // Optionally handle consent (e.g., save to backend)
+                    }
+                    login(); // Proceed with Google Sign-In
+                  }}
                   className="w-full mt-5 flex gap-4 items-center"
                 >
                   <FcGoogle className="h-7 w-7" />
