@@ -62,7 +62,7 @@ function Header() {
       <div>
         {user ? (
           <div className="flex items-center gap-3">
-            <a href="/Hotelbooking">
+            <a href="/my-bookings">
               <button
                 style={{
                   backgroundColor: "#FFEE8C",
@@ -82,7 +82,7 @@ function Header() {
                   e.target.style.backgroundColor = "#FFEE8C";
                 }}
               >
-                Book Hotel
+                My Bookings
               </button>
             </a>
             <a href="/my-trips">

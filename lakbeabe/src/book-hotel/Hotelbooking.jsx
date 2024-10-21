@@ -162,7 +162,7 @@ const GetPlacePhoto = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     const bookingData = {
-      hotelName: hotel?.hotelName,
+      hotelName: hotel?.hotelName || hotelName,
       checkInDate: startDate.toISOString(),
       checkOutDate: endDate.toISOString(),
       numberOfAdults,
@@ -172,10 +172,10 @@ const GetPlacePhoto = async () => {
       userId: user?.id,
       createdAt: new Date().toISOString(),
       bedType,
-      photoUrl,
-      description: hotel?.description,
-      address: hotel?.hotelAddress,
-      price: hotel?.price,
+      photoUrl: imageURL,
+      description: hotel?.description || desc,
+      address: hotel?.hotelAddress || address,
+      price: hotel?.price || price,
     };
 
 
@@ -208,20 +208,14 @@ const GetPlacePhoto = async () => {
         <div className="overlay">
           <div className="success-message animated">
             <FontAwesomeIcon icon={faCheckCircle} size="3x" color="green" />
-            <h2>Booking Successful!</h2>
+            <h2 className='font-bold text-3xl m-5' >Booking Successful!</h2>
             <button
               onClick={() => navigate("/my-bookings")}
               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
             >
-              Go to My Trips
+              Go to My Bookings
             </button>
             {/* Optional: Add a close button */}
-            <button
-              onClick={() => setShowSuccessMessage(false)}
-              className="ml-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
@@ -319,7 +313,7 @@ const GetPlacePhoto = async () => {
           </div>
 
           {/* Guest Count Section */}
-          <div className="guest-count">
+          <div className="guest-count mt-3">
             <label>Number of Adults:</label>
             <select
               id="adults"

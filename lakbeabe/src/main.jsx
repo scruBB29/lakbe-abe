@@ -20,6 +20,7 @@ const isAuthenticated = () => {
 };
 
 
+
 // LakbeAbe web page pathways
 const router = createBrowserRouter([
   {
@@ -40,11 +41,11 @@ const router = createBrowserRouter([
   },
   {
     path:'/Hotelbooking',
-    element: <HotelBooking/>
+    element: isAuthenticated() ? <HotelBooking/> : <Navigate to="/" />,
   },
   {
     path:'/my-bookings',
-    element: <BokedHotel/>
+    element: isAuthenticated() ? <BokedHotel/> : <Navigate to="/" />,
   },
 ])
 
