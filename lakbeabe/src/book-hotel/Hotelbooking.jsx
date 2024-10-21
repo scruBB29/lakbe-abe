@@ -26,6 +26,12 @@ function HotelBooking() {
 
   const { hotel, maxGuests,} = location.state || {};
 
+ // Check if hotel data is available
+ useEffect(() => {
+  if (!hotel && !hotelName) {
+    navigate('/create-trip'); // Redirect if no hotel data
+  }
+}, [hotel, hotelName, navigate]);
 
 
   const [startDate, setStartDate] = useState(null);
@@ -172,7 +178,7 @@ const GetPlacePhoto = async () => {
       userId: user?.id,
       createdAt: new Date().toISOString(),
       bedType,
-      photoUrl: imageURL,
+      photoUrl: hotel?.photoUrl || imageURL,
       description: hotel?.description || desc,
       address: hotel?.hotelAddress || address,
       price: hotel?.price || price,
@@ -200,6 +206,7 @@ const GetPlacePhoto = async () => {
         setNumberOfChildren(Number(queryParams.get('numberOfChildren')));
     }
  }, [queryParams]);
+
 
   return (
     <div className="booking-container flex mt-20 mb-20">

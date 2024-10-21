@@ -47,7 +47,7 @@ function UserBookingsCardItem({ hotelbooked }) {
 
   return (
     <Link 
-    to={`/HotelBooking?hotelName=${encodeURIComponent(hotelbooked.hotelName)}&price=${hotelbooked.price}&desc=${hotelbooked.description}&imageURL=${encodeURIComponent(hotelbooked.photoUrl)}&address=${encodeURIComponent(hotelbooked.address)}`}
+    to={`/HotelBooking?hotelName=${encodeURIComponent(hotelbooked.hotelName)}&price=${hotelbooked.price}&desc=${hotelbooked.description}&imageURL=${encodeURIComponent(photoUrl)}&address=${encodeURIComponent(hotelbooked.address)}`}
     >
         
       <div className='hover:scale-105 transition-all'>

@@ -1,7 +1,7 @@
 import { db } from '@/service/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import UserBookingsCardItem from './components/UserBookingsCardItem';
 
 function BookedHotel() {
@@ -50,7 +50,9 @@ function BookedHotel() {
               <UserBookingsCardItem hotelbooked={booking} key={booking.id} />
             ))
           ) : (
-            <div>No bookings found.</div>
+            <div>No bookings found.  <Link to="/create-trip" className="text-blue-500 underline">
+            Book Now
+          </Link></div>
           )}
         </div>
       )}
