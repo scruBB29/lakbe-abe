@@ -11,6 +11,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Viewtrip from './view-trip/[tripId]/index.jsx'
 import HotelBooking  from './book-hotel/Hotelbooking.jsx'
 import MyTrips from './my-trips/index.jsx'
+import BokedHotel from './my-booked/index.jsx'
 
 
 // Simple authentication check
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path:'/Hotelbooking',
     element: <HotelBooking/>
+  },
+  {
+    path:'/my-bookings',
+    element: <BokedHotel/>
   },
 ])
 
