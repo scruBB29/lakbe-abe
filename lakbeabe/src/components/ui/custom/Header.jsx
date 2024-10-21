@@ -129,6 +129,7 @@ function Header() {
                 </h2>
               </PopoverContent>
             </Popover>
+            <h2>{user?.name}</h2>
           </div>
         ) : (
           <Button
