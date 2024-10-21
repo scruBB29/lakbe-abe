@@ -56,7 +56,7 @@ function UserBookingsCardItem({ hotelbooked }) {
           className="object-cover rounded-xl h-[220px] w-full" 
           alt={hotelbooked?.hotelName || "Placeholder"} 
         />
-        <div>
+        <div>  
           <h2 className='font-bold text-lg'>{hotelbooked?.hotelName}</h2>
           <h2 className='text-sm text-gray-500'>
             <b>{hotelbooked?.address}</b> 

@@ -35,4 +35,40 @@
     cursor: not-allowed; /* This indicates that the date is not selectable */
 }
 
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Black transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+  }
+  
+  .success-message {
+    background-color: white; /* Background color for the message box */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,0.5) 0px 5px 15px; /* Optional shadow */
+    text-align: center; /* Center text */
+   animation: fadeInUp .5s ease; /* Animation */
+   transform-origin: bottom; /* Animation origin */
+   opacity: .9; /* Slight transparency */
+   }
+
+   @keyframes fadeInUp {
+     from {
+       transform: translateY(20px); /* Start slightly below */
+       opacity: .5; /* Start slightly transparent */
+     }
+     to {
+       transform: translateY(0); /* End at original position */
+       opacity: .9; /* End fully opaque */
+     }
+   }
+
 /* Additional styles can be added as necessary */
