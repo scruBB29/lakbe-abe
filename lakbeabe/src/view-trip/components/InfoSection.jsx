@@ -3,7 +3,7 @@ import { GetPlaceDetails } from "@/service/GlobalApi";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { IoIosSend } from "react-icons/io";
+import { LuCalendarClock } from "react-icons/lu";
 import { PHOTO_REF_URL } from "@/service/GlobalApi";
 
 
@@ -50,7 +50,7 @@ function InfoSection({ trip }) {
           </div>
         </div>
         <Button>
-          <IoIosSend />
+          <LuCalendarClock />
         </Button>
       </div>
     </div>
