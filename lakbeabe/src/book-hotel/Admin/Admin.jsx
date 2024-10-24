@@ -49,6 +49,18 @@ function AdminBookings() {
     }
   };
 
+  const toggleActiveStatus = async (id, currentStatus) => {
+    try {
+      await updateDoc(doc(db, "UserBookings", id), {
+        isActive: !currentStatus // Toggle the isActive status
+      });
+      fetchBookings(); // Refresh the list after updating
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      alert("Failed to update booking status. Please try again.");
+    }
+  };
+
   // Filter bookings based on selected dates
   const filteredBookings = bookings.filter(booking => {
     const checkInDate = new Date(booking.checkInDate);
@@ -118,14 +130,14 @@ function AdminBookings() {
                     </button>
                   </td>
                   <td>
-  {booking.isAccepted ? (
-    'IN PROGRESS'
-  ) : (
-    <button onClick={() => handleAcceptBooking(booking.id)} className="button1 accept-button">
-      Accept
-    </button>
-  )}
-</td>
+                    {booking.isAccepted ? (
+                      'IN PROGRESS'
+                    ) : (
+                      <button onClick={() => handleAcceptBooking(booking.id)} className="button1 accept-button">
+                        Accept
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))
             ) : (

@@ -61,9 +61,11 @@ function HotelBooking() {
   const today = new Date();
 
   useEffect(() => {
-    hotel && GetPlacePhoto();
+    if (hotel) {
+      GetPlacePhoto();
+    }
     fetchBookedDates();
-  }, [hotel]);
+  }, [hotel, hotelName]);
 
   const GetPlacePhoto = async () => {
     const data = {
@@ -105,7 +107,7 @@ function HotelBooking() {
     const bookingsRef = collection(db, "UserBookings");
     const q = query(
       bookingsRef,
-      where("hotelName", "==", hotel?.hotelName),
+      where("hotelName", "==", hotel?.hotelName || hotelName),
       where("userEmail", "==", user?.email)
     );
 
