@@ -118,6 +118,7 @@ function CreateTrip() {
     }
   };
 
+  
   const SaveAiTrip = async (TripData) => {
     setLoading(true);
     
@@ -186,25 +187,22 @@ function CreateTrip() {
       <div className="mt-20 flex flex-col gap-1">
         <h2 className="text-xl my-3 font-medium">Where is your destination?</h2>
         
-
-       
-        
         {/* Predefined Locations Dropdown */}
         <select
-  onChange={(e) => {
-    const selectedLocation = predefinedLocations[e.target.selectedIndex - 1]; // Adjust index for selected options
-    handleInputChange("location", selectedLocation);
-    setPlace(selectedLocation); // Set place to the selected location
-  }}
-   className="grid grid-cols-3 gap-5 mt-1 p-4 rounded-md bg-transparent border-2"
->
-  <option disabled selected>Select a location...</option> {/* Make this option disabled */}
-  {predefinedLocations.map((location, index) => (
-    <option key={index} value={location.value}>
-      {location.label}
-    </option>
-  ))}
-</select>
+          onChange={(e) => {
+            const selectedLocation = predefinedLocations[e.target.selectedIndex - 1]; // Adjust index for selected options
+            handleInputChange("location", selectedLocation);
+            setPlace(selectedLocation); // Set place to the selected location
+          }}
+          className="grid grid-cols-3 gap-5 mt-1 p-4 rounded-md bg-transparent border-2"
+        >
+          <option disabled selected>Select a location...</option> {/* Make this option disabled */}
+          {predefinedLocations.map((location, index) => (
+            <option key={index} value={location.value}>
+              {location.label}
+            </option>
+          ))}
+        </select>
 
         <div>
           <h2 className="text-xl my-3 font-medium">How many days are you planning your trip?</h2>

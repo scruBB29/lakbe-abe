@@ -16,41 +16,84 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/service/firebaseConfig";
+import { toast } from "sonner";
 
 function Header() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
   const [openDialog, setOpenDialog] = useState(false); // Track dialog visibility
   const [isAgreed, setIsAgreed] = useState(false); // Track checkbox state
 
-  // FUNCTION FOR LOGIN HANDLE
-  const login = useGoogleLogin({
-    onSuccess: (codeResp) => GetUserProfile(codeResp),
-    onError: (error) => console.log(error),
-  });
-
   useEffect(() => {
-    console.log(user);
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
   }, []);
 
-  const GetUserProfile = (tokenInfo) => {
-    axios
-      .get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tokenInfo?.access_token}`,
-            Accept: "Application/json",
-          },
-        }
-      )
-      .then((resp) => {
-        console.log(resp);
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      console.log("Attempting to sign in with Google...");
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("User signed in:", user);
+      
+      await handleUserProfile(user);
+      setOpenDialog(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      toast("Google Sign-In failed. Please try again.");
+    }
+  };
 
-        // Save user data to localStorage and reload page
-        localStorage.setItem("user", JSON.stringify(resp.data));
-        setOpenDialog(false);
-        window.location.reload();
+  const handleUserProfile = async (user) => {
+    const userDocRef = doc(db, "users", user.email);
+    const userDoc = await getDoc(userDocRef);
+    
+    if (!userDoc.exists()) {
+      console.log("Creating new user document for:", user.uid);
+      await setDoc(userDocRef, {
+        email: user.email,
+        isAdmin: false, // Default to false, you can set this based on your logic
+        isHotel: false,
+        isRegular: true,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        userId: user.uid, // Include userId in the Firestore document
+        // Add any other custom fields you need
       });
+      console.log("New user document created:", { 
+        email: user.email, 
+        displayName: user.displayName 
+      });
+    } else {
+      console.log("User document already exists for:", user.uid);
+    }
+    
+    // Include userId in the user object before storing it in local storage
+    const userWithAdmin = {
+      ...user,
+      userId: userDoc.exists() ? userDoc.data().userId : user.uid, // Ensure userId is included
+      isAdmin: userDoc.exists() ? userDoc.data().isAdmin : false,
+      isHotel: userDoc.exists() ? userDoc.data().isHotel : false,
+      isRegular: userDoc.exists() ? userDoc.data().isRegular : false,
+    };
+    
+    localStorage.setItem("user", JSON.stringify(userWithAdmin));
+    console.log("User data stored in localStorage:", JSON.stringify(userWithAdmin));
+  };
+
+  const handleGoogleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      setUser(null);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
@@ -111,7 +154,7 @@ function Header() {
             <Popover>
               <PopoverTrigger className="bg-transparent rounded-full h-[35px] w-[35px] px-0 py-0 outline-none">
                 <img
-                  src={user?.picture}
+                  src={user?.photoURL}
                   className="h-[35px] w-[35px] rounded-full"
                   alt="User Avatar"
                 />
@@ -119,17 +162,13 @@ function Header() {
               <PopoverContent>
                 <h2
                   className="cursor-pointer"
-                  onClick={() => {
-                    googleLogout();
-                    localStorage.clear();
-                    window.location.href = "/";
-                  }}
+                  onClick={handleGoogleLogout}
                 >
                   Logout
                 </h2>
               </PopoverContent>
             </Popover>
-            <h2>{user?.name}</h2>
+            <h2>{user?.displayName}</h2>
           </div>
         ) : (
           <Button
@@ -173,7 +212,7 @@ function Header() {
                       console.log("User agreed to receive travel reminders.");
                       // Optionally handle consent (e.g., save to backend)
                     }
-                    login(); // Proceed with Google Sign-In
+                    handleGoogleSignIn(); // Proceed with Google Sign-In
                   }}
                   className="w-full mt-5 flex gap-4 items-center"
                 >
