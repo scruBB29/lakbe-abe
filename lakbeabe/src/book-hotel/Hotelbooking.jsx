@@ -34,17 +34,22 @@ function HotelBooking() {
 }, [hotel, hotelName, navigate]);
 
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+
+const [startDate, setStartDate] = useState(() => {
+    return queryParams.has('startDate') ? new Date(queryParams.get('startDate')) : null;
+  });
+  const [endDate, setEndDate] = useState(() => {
+    return queryParams.has('endDate') ? new Date(queryParams.get('endDate')) : null;
+  });
   const [numberOfAdults, setNumberOfAdults] = useState(1);
   const [numberOfChildren, setNumberOfChildren] = useState(0);
   const [bookedDates, setBookedDates] = useState([]); // State for booked dates
   const [bedType, setBedType] = useState("");
-  const [photoUrl, setPhotoUrl] = useState();
+  const [photoUrl, setPhotoUrl] = useState("");
   const [description, setDescription] = useState(""); // State for 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State for success message
   const [errorMessage, setErrorMessage] = useState(""); // State for error message
-
+  const [isActive, setisActice] = useState(true)
   const bedTypes = [
     "King size",
     "Queen size",
@@ -53,6 +58,8 @@ function HotelBooking() {
     "Single bed",
     "Double-Double bed",
   ];
+
+  
 
   // Get current date for minDate
   const today = new Date();
@@ -107,33 +114,34 @@ const GetPlacePhoto = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const bookingsRef = collection(db, "UserBookings");
     const q = query(
-      bookingsRef,
-      where("hotelName", "==", hotel?.hotelName),
-      where("userEmail", "==", user?.email)
+        bookingsRef,
+        where("hotelName", "==", hotel?.hotelName),
+        where("userEmail", "==", user?.email)
     );
 
     const querySnapshot = await getDocs(q);
     let dates = [];
 
     querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const checkInDate = new Date(data.checkInDate);
-      const checkOutDate = new Date(data.checkOutDate);
+        const data = doc.data();
+        if (data.isActive) { // Only consider active bookings
+            const checkInDate = new Date(data.checkInDate);
+            const checkOutDate = new Date(data.checkOutDate);
 
-      // Push all dates between check-in and check-out into the bookedDates array
-      for (let d = checkInDate; d <= checkOutDate; d.setDate(d.getDate() + 1)) {
-        dates.push(new Date(d));
-      }
+            // Push all dates between check-in and check-out into the bookedDates array
+            for (let d = checkInDate; d <= checkOutDate; d.setDate(d.getDate() + 1)) {
+                dates.push(new Date(d));
+            }
+        }
     });
 
     setBookedDates(dates);
-  };
-
+};
   const isDateBooked = (date) => {
     return bookedDates.some(
-      (bookedDate) => bookedDate.toDateString() === date.toDateString()
+        (bookedDate) => bookedDate.toDateString() === date.toDateString()
     );
-  };
+};
 
   // Adjust guest count based on selected bed type
   const adjustGuestCountByBedType = (selectedBedType) => {
@@ -165,6 +173,21 @@ const GetPlacePhoto = async () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!startDate || !endDate) {
+        alert("Please select both check-in and check-out dates.");
+        return;
+      }
+  
+      if (isDateBooked(startDate) || isDateBooked(endDate)) {
+        alert("Selected dates are already booked.");
+        return;
+      }
+      // Check if bed type is selected
+    if (!bedType) {
+        alert("Please select a bed type.");
+        return;
+    }
+
     const user = JSON.parse(localStorage.getItem("user"));
 
     const bookingData = {
@@ -182,6 +205,7 @@ const GetPlacePhoto = async () => {
       description: hotel?.description || desc,
       address: hotel?.hotelAddress || address,
       price: hotel?.price || price,
+      isActive
     };
 
 
