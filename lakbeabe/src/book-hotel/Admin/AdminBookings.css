@@ -1,0 +1,37 @@
+.admin-bookings-container {
+  max-width: 900px; /* Set a max width for the container */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add some padding */
+}
+
+.bookings-table {
+  width: 100%; /* Make the table take full width */
+  border-collapse: collapse; /* Collapse borders */
+}
+
+.bookings-table th,
+.bookings-table td {
+  border: 1px solid #ddd; /* Add borders to cells */
+  padding: 8px; /* Add padding to cells */
+  text-align: left; /* Align text to the left */
+}
+
+.bookings-table th {
+  background-color: #f2f2f2; /* Light gray background for headers */
+}
+
+.bookings-table tr:hover {
+  background-color: #f5f5f5; /* Highlight row on hover */
+}
+
+.button1 {
+  background-color: #ff4d4d; /* Red background for remove button */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  padding: 5px 10px; /* Add padding */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.button1:hover {
+  background-color: #ff1a1a; /* Darker red on hover */
+}
