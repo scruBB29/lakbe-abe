@@ -49,9 +49,7 @@ function InfoSection({ trip }) {
             </h2>
           </div>
         </div>
-        <Button>
-          <LuCalendarClock />
-        </Button>
+
       </div>
     </div>
   );
