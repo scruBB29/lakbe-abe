@@ -9,9 +9,10 @@ import Header from './components/ui/custom/Header.jsx'
 import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Viewtrip from './view-trip/[tripId]/index.jsx'
-import HotelBooking  from './book-hotel/Hotelbooking.jsx'
+import HotelBooking from './book-hotel/Components/HotelBooking.jsx'
 import MyTrips from './my-trips/index.jsx'
 import BokedHotel from './my-booked/index.jsx'
+import AdminBookings from './book-hotel/Admin/Admin.jsx'
 
 
 // Simple authentication check
@@ -19,6 +20,11 @@ const isAuthenticated = () => {
   return !!localStorage.getItem('user'); // Check local storage for a user item
 };
 
+// Simple authentication check
+const isauthenticated = () => {
+  const user = JSON.parse(localStorage.getItem('user')); // Parse the user object from local storage
+  return user && user.isAdmin === true; // Check if the user exists and matches the specific email
+};
 
 
 // LakbeAbe web page pathways
@@ -46,6 +52,10 @@ const router = createBrowserRouter([
   {
     path:'/my-bookings',
     element: isAuthenticated() ? <BokedHotel/> : <Navigate to="/" />,
+  },
+  {
+    path:'/adminbookings',
+    element: isauthenticated() ? <AdminBookings/> : <Navigate to="/" />,
   },
 ])
 
