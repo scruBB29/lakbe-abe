@@ -203,7 +203,8 @@ function HotelBooking() {
       address: hotel?.hotelAddress || address,
       price: hotel?.price || price,
       isActive,
-      isAccepted
+      isAccepted,
+      fullName: user?.displayName,
     };
   
     try {

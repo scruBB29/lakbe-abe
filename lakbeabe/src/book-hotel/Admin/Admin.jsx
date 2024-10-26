@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/service/firebaseConfig";
-import { collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, updateDoc } from "firebase/firestore";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import styles
 import './AdminBookings.css'; // Ensure your CSS file is imported
+import axios from "axios";
 
 function AdminBookings() {
   const [bookings, setBookings] = useState([]);
@@ -39,15 +40,90 @@ function AdminBookings() {
 
   const handleAcceptBooking = async (id) => {
     try {
+      // Update booking status to accepted
       await updateDoc(doc(db, "UserBookings", id), {
         isAccepted: true // Update the status to ACCEPTED
       });
+  
+      // Fetch the updated booking details
+      const bookingRef = doc(db, "UserBookings", id);
+      const bookingSnapshot = await getDoc(bookingRef);
+      
+      if (bookingSnapshot.exists()) {
+        const bookingData = bookingSnapshot.data();
+  
+        // Ensure the date strings are valid
+        const checkInDate = new Date(bookingData.checkInDate);
+        const checkOutDate = new Date(bookingData.checkOutDate);
+  
+        if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+          throw new Error("Invalid date format in booking data.");
+        }
+  
+        // Prepare the event details for Google Calendar
+        const eventDetails = {
+          summary: `Booking Confirmation for ${bookingData.fullName} at ${bookingData.hotelName}`, // Use userEmail instead of customerName
+          location: bookingData.address, // Adjust according to your data structure
+          description: `Booking Details: Check-in: ${checkInDate.toLocaleDateString()}, Check-out: ${checkOutDate.toLocaleDateString()}`, // Include other relevant details
+          start: {
+            dateTime: checkInDate.toISOString(), // Convert to ISO string
+            timeZone: 'Asia/Manila', // Set timezone to Philippines
+          },
+          end: {
+            dateTime: checkOutDate.toISOString(), // Convert to ISO string
+            timeZone: 'Asia/Manila', // Set timezone to Philippines
+          },
+          reminders: {
+            useDefault: false,
+            overrides: [
+              { method: 'email', minutes: 24 * 60 }, // 1 day before the event
+              { method: 'popup', minutes: 24 * 60 }, // 1 day before the event
+            ],
+          },
+        };
+  
+        // Create the Google Calendar event
+        await createGoogleCalendarEvent(eventDetails);
+      }
+  
       fetchBookings(); // Refresh the list after updating
     } catch (error) {
       console.error("Error updating booking status:", error);
       alert("Failed to update booking status. Please try again.");
     }
   };
+
+  const createGoogleCalendarEvent = async (eventDetails) => {
+    // Retrieve the access token from local storage
+    const accessToken = localStorage.getItem('googleAccessToken'); // Ensure this key matches how you stored it
+  
+    if (!accessToken) {
+      console.error("No access token found. Please authenticate again.");
+      alert("Authentication is required. Please sign in to Google.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        eventDetails,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      console.log("Event created successfully:", response.data);
+    } catch (error) {
+      console.error("Failed to create calendar event:", error.response?.data || error.message);
+      alert("Error creating calendar event: " + (error.response?.data?.error?.message || error.message));
+    }
+  };
+
+  
+
 
   const toggleActiveStatus = async (id, currentStatus) => {
     try {

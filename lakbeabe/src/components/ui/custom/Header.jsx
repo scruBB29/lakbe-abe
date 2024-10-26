@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/service/firebaseConfig";
@@ -33,12 +33,22 @@ function Header() {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/calendar'); // Add this line
+  
     try {
       console.log("Attempting to sign in with Google...");
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log("User signed in:", user);
       
+      // Get the credential from the result
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const accessToken = credential.accessToken; // Access token for Google API
+  
+      // Store the access token in local storage
+      localStorage.setItem('googleAccessToken', accessToken);
+      console.log("Access token stored in localStorage:", accessToken);
+  
       await handleUserProfile(user);
       setOpenDialog(false);
       window.location.reload();
@@ -47,6 +57,7 @@ function Header() {
       toast("Google Sign-In failed. Please try again.");
     }
   };
+  
 
   const handleUserProfile = async (user) => {
     const userDocRef = doc(db, "users", user.email);
