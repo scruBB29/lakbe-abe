@@ -13,6 +13,7 @@ import HotelBooking from './book-hotel/Components/HotelBooking.jsx'
 import MyTrips from './my-trips/index.jsx'
 import BokedHotel from './my-booked/index.jsx'
 import AdminBookings from './book-hotel/Admin/Admin.jsx'
+import Footer from './view-trip/components/Footer.jsx'
 
 
 // Simple authentication check
@@ -65,6 +66,7 @@ createRoot(document.getElementById('root')).render(
       <Header />
       <Toaster />
       <RouterProvider router={router} />
+      <Footer />
     </GoogleOAuthProvider>
   </StrictMode>,
 )
