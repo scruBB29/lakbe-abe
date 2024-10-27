@@ -15,50 +15,59 @@ import BokedHotel from './my-booked/index.jsx'
 import AdminBookings from './book-hotel/Admin/Admin.jsx'
 import Footer from './view-trip/components/Footer.jsx'
 
+import Policy from './book-hotel/Components/Policy.jsx'
+import SigninPolicy from './components/ui/custom/SigninPolicy.jsx'
 
 // Simple authentication check
 const isAuthenticated = () => {
   return !!localStorage.getItem('user'); // Check local storage for a user item
 };
 
-// Simple authentication check
-const isauthenticated = () => {
+// Simple authentication check for admin
+const isAdmin = () => {
   const user = JSON.parse(localStorage.getItem('user')); // Parse the user object from local storage
-  return user && user.isAdmin === true; // Check if the user exists and matches the specific email
+  return user && user.isAdmin === true; // Check if the user exists and is an admin
 };
-
 
 // LakbeAbe web page pathways
 const router = createBrowserRouter([
   {
-    path:'/',
-    element:<App/>
+    path: '/',
+    element: <App />
   },
   {
-    path:'create-trip',
-    element:<CreateTrip/>
+    path: 'create-trip',
+    element: <CreateTrip />
   },
   {
-    path:'/view-trip/:tripId',
-    element: isAuthenticated() ? <Viewtrip/> : <Navigate to="/" />,
+    path: '/view-trip/:tripId',
+    element: isAuthenticated() ? <Viewtrip /> : <Navigate to="/" />,
   },
   {
-    path:'/my-trips',
-    element: isAuthenticated() ? <MyTrips/> : <Navigate to="/" />,
+    path: '/my-trips',
+    element: isAuthenticated() ? <MyTrips /> : <Navigate to="/" />,
   },
   {
-    path:'/Hotelbooking',
-    element: isAuthenticated() ? <HotelBooking/> : <Navigate to="/" />,
+    path: '/Hotelbooking',
+    element: isAuthenticated() ? <HotelBooking /> : <Navigate to="/" />,
   },
   {
-    path:'/my-bookings',
-    element: isAuthenticated() ? <BokedHotel/> : <Navigate to="/" />,
+    path: '/my-bookings',
+    element: isAuthenticated() ? <BokedHotel /> : <Navigate to="/" />,
   },
   {
-    path:'/adminbookings',
-    element: isauthenticated() ? <AdminBookings/> : <Navigate to="/" />,
+    path: '/adminbookings',
+    element: isAdmin() ? <AdminBookings /> : <Navigate to="/" />,
   },
-])
+  {
+    path: '/policy',
+    element: isAuthenticated() ? <Policy/> : <Navigate to="/" />,
+  },
+  {
+    path: '/signinpolicy',
+    element: <SigninPolicy />,
+  },
+]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -69,4 +78,4 @@ createRoot(document.getElementById('root')).render(
       <Footer />
     </GoogleOAuthProvider>
   </StrictMode>,
-)
+);

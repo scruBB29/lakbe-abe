@@ -43,18 +43,6 @@ function BookedHotel() {
   return (
     <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10 w-screen'>
       <h2 className='font-bold text-3xl'>Booked Hotels</h2>
-      <div className="mt-4 flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    id="agreement"
-                    checked={isAgreed}
-                    onChange={(e) => setIsAgreed(e.target.checked)}
-                    className="mt-1"
-                  />
-                  <label htmlFor="agreement" className="text-sm">
-                    Enable Scheduling in Google Calendar for Booked Hotels
-                  </label>
-                </div>
       {loading ? (
         <div>Loading...</div> // Loading indicator
       ) : (

@@ -22,9 +22,11 @@ function SummaryPopup({ bookingDetails, onClose, onConfirm, showCalendarReminder
             />
             Remind me the booking on my Google Calendar
           </label>
+          <a href="/policy">
           <span className="info-icon" title="Checking this box will allow us to access your Google Calendar to add the booking event.">
             &#9432;
           </span>
+          </a>
         </div>
 
         <div className="popup-actions">

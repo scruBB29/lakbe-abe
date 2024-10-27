@@ -241,18 +241,23 @@ function Header() {
                     className="mt-1"
                   />
                   <label htmlFor="agreement" className="text-sm">
-                    I agree to receive daily travel plan reminders (optional)
+                  Agreeing to Google access with security.
                   </label>
+                  <a href="/signinpolicy">
+          <span className="info-icon" title="Checking this box will allow us to access your Google Calendar to add the booking event.">
+            &#9432;
+          </span>
+          </a>
                 </div>
 
                 {/* Sign In Button (Always Enabled) */}
                 <Button
                   onClick={() => {
-                    if (isAgreed) {
-                      console.log("User agreed to receive travel reminders.");
-                      // Optionally handle consent (e.g., save to backend)
+                    if (!isAgreed) {
+                      setOpenDialog(false); // Close the dialog if checkbox is not checked
+                    } else {
+                      handleGoogleSignIn(); // Proceed with Google Sign-In
                     }
-                    handleGoogleSignIn(); // Proceed with Google Sign-In
                   }}
                   className="w-full mt-5 flex gap-4 items-center"
                 >
