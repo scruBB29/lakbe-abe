@@ -33,26 +33,27 @@ function Header() {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    provider.addScope('https://www.googleapis.com/auth/calendar'); // Add this line
-  
+    provider.addScope("https://www.googleapis.com/auth/calendar"); // Add this line
+    provider.addScope("profile"); // Add the profile scope
+    provider.addScope("email"); // Add the email scope
     try {
       console.log("Attempting to sign in with Google...");
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log("User signed in:", user);
-      
+
       // Get the credential from the result
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const accessToken = credential.accessToken; // Access token for Google API
-  
+
       // Ensure accessToken is not undefined
       if (!accessToken) {
         throw new Error("Access token is undefined. Please try again.");
       }
-  
+
       // Store the access token in local storage
       localStorage.setItem("googleAccessToken", accessToken);
-  
+
       await handleUserProfile(user, accessToken);
       setOpenDialog(false);
       window.location.reload();
@@ -65,7 +66,7 @@ function Header() {
   const handleUserProfile = async (user, accessToken) => {
     const userDocRef = doc(db, "users", user.email);
     const userDoc = await getDoc(userDocRef);
-    
+
     if (!userDoc.exists()) {
       console.log("Creating new user document for:", user.uid);
       const userData = {
@@ -74,18 +75,18 @@ function Header() {
           displayName: user.displayName,
           photoURL: user.photoURL,
           userId: user.uid, // Ensure userId is included
-          isAdmin:false,
-          isRegular:true,
-          isHotel:false
+          isAdmin: false,
+          isRegular: true,
+          isHotel: false,
         },
         accessToken: {
           googleAccessToken: accessToken,
         },
       };
       await setDoc(userDocRef, userData);
-      console.log("New user document created:", { 
-        email: user.email, 
-        displayName: user.displayName 
+      console.log("New user document created:", {
+        email: user.email,
+        displayName: user.displayName,
       });
     } else {
       console.log("User document already exists for:", user.uid);
@@ -102,7 +103,7 @@ function Header() {
       };
       await setDoc(userDocRef, userData, { merge: true });
     }
-    
+
     // Include userId in the user object before storing it in local storage
     const userWithAdmin = {
       ...user,
@@ -111,9 +112,12 @@ function Header() {
       isHotel: userDoc.exists() ? userDoc.data().profile.isHotel : false,
       isRegular: userDoc.exists() ? userDoc.data().profile.isRegular : true,
     };
-    
+
     localStorage.setItem("user", JSON.stringify(userWithAdmin));
-    console.log("User data stored in localStorage:", JSON.stringify(userWithAdmin));
+    console.log(
+      "User data stored in localStorage:",
+      JSON.stringify(userWithAdmin)
+    );
   };
 
   const handleGoogleLogout = async () => {
@@ -130,7 +134,11 @@ function Header() {
   return (
     <div className="p-2 shadow-sm flex justify-between items-center px-5 ">
       <a href="/">
-        <img src="/LakbeAbe.svg" className="cursor-pointer" alt="LakbeAbe Logo" />
+        <img
+          src="/LakbeAbe.svg"
+          className="cursor-pointer"
+          alt="LakbeAbe Logo"
+        />
       </a>
 
       <div>
@@ -191,10 +199,7 @@ function Header() {
                 />
               </PopoverTrigger>
               <PopoverContent>
-                <h2
-                  className="cursor-pointer"
-                  onClick={handleGoogleLogout}
-                >
+                <h2 className="cursor-pointer" onClick={handleGoogleLogout}>
                   Logout
                 </h2>
               </PopoverContent>
@@ -217,7 +222,11 @@ function Header() {
             <DialogHeader>
               <DialogDescription>
                 <div className="flex items-center">
-                  <img src="/LakbeAbe Logos.svg" className="h-14 ml-5" alt="LakbeAbe Logo" />
+                  <img
+                    src="/LakbeAbe Logos.svg"
+                    className="h-14 ml-5"
+                    alt="LakbeAbe Logo"
+                  />
                 </div>
                 <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
                 <p>Sign in to the App with Google authentication securely</p>
