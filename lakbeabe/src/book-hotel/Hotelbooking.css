@@ -1,0 +1,74 @@
+.booking-container {
+    display: flex;
+    flex-direction: row; /* Use column direction for better stacking */
+    justify-content: center; /* Center items vertically */
+    align-items: center; /* Center items horizontally */
+    position: relative;
+    width: 100%; /* Make it responsive */
+    max-width: 1000px; /* Set a maximum width */
+    padding: 50px; /* Add padding */
+    background-color: white; /* Background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    margin: 0 auto; /* Center the container on the page */
+}
+
+
+.date-picker, .guest-count {
+    margin-bottom: 15px; /* Space between fields */
+}
+
+.transparent-datepicker {
+    background-color: transparent !important; /* Make background transparent */
+    border: 1px solid #ccc; /* Optional: Add a light border */
+    padding: 10px; /* Add some padding */
+    border-radius: 4px; /* Optional: Rounded corners */
+}
+
+.transparent-datepicker:focus {
+    outline: none; /* Remove outline on focus */
+    border-color: #007bff; /* Optional: Change border color on focus */
+}
+
+
+.occupied {
+    cursor: not-allowed; /* This indicates that the date is not selectable */
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Black transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+  }
+  
+  .success-message {
+    background-color: white; /* Background color for the message box */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,0.5) 0px 5px 15px; /* Optional shadow */
+    text-align: center; /* Center text */
+   animation: fadeInUp .5s ease; /* Animation */
+   transform-origin: bottom; /* Animation origin */
+   opacity: .9; /* Slight transparency */
+   }
+
+   @keyframes fadeInUp {
+     from {
+       transform: translateY(20px); /* Start slightly below */
+       opacity: .5; /* Start slightly transparent */
+     }
+     to {
+       transform: translateY(0); /* End at original position */
+       opacity: .9; /* End fully opaque */
+     }
+   }
+
+/* Additional styles can be added as necessary */
