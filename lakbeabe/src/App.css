@@ -40,7 +40,7 @@
 
 .bg-image {
   margin: 0;
-  background-image: url('./LakbeAbe_bg.png');
+  background-image: url('/LakbeAbe_bg.png');
   height: 100vh; /* Adjust height as needed */
   background-size: cover; /* Cover the entire area */
   background-size: cover; /* Cover the entire area */
