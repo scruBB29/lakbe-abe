@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Hotelbooking.css";
 import { db } from "@/service/firebaseConfig";
-import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, getDoc, doc} from "firebase/firestore";
 import { GetPlaceDetails, PHOTO_REF_URL } from "@/service/GlobalApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,8 @@ import HotelDetails from "./HotelDetails";
 import BookingForm from "./BookingForm";
 import SuccessMessage from "./SuccessMessage";
 import ErrorMessage from "./ErrorMessage";
+import SummaryPopup from './Summarypopup'
+import axios from "axios";
 
 function HotelBooking() {
   const location = useLocation();
@@ -48,6 +50,8 @@ function HotelBooking() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [isAccepted, setIsAccepted] = useState(false);
+  const [showSummaryPopup, setShowSummaryPopup] = useState(false);
+const [showCalendarReminder, setShowCalendarReminder] = useState(false);
 
   const bedTypes = [
     "King size",
@@ -85,6 +89,7 @@ function HotelBooking() {
     }
   };
 
+
   const calculateTotalPrice = () => {
     if (startDate && endDate) {
       const timeDiff = endDate.getTime() - startDate.getTime();
@@ -103,12 +108,10 @@ function HotelBooking() {
   const totalPrice = calculateTotalPrice();
 
   const fetchBookedDates = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
     const bookingsRef = collection(db, "UserBookings");
     const q = query(
       bookingsRef,
-      where("hotelName", "==", hotel?.hotelName || hotelName),
-      where("userEmail", "==", user?.email)
+      where("hotelName", "==", hotel?.hotelName || hotelName)
     );
 
     const querySnapshot = await getDocs(q);
@@ -187,6 +190,22 @@ function HotelBooking() {
       return;
     }
   
+    const bookingDetails = {
+      hotelName: hotel?.hotelName || hotelName,
+      checkInDate: startDate.toISOString(),
+      checkOutDate: endDate.toISOString(),
+      numberOfAdults,
+      numberOfChildren,
+      totalPrice,
+      bedType,
+    };
+  
+    setShowSummaryPopup(true);
+  };
+  
+  const handleConfirmBooking = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+  
     const bookingData = {
       hotelName: hotel?.hotelName || hotelName,
       checkInDate: startDate.toISOString(),
@@ -203,17 +222,22 @@ function HotelBooking() {
       address: hotel?.hotelAddress || address,
       price: hotel?.price || price,
       isActive,
-      isAccepted
+      isAccepted,
+      fullName: user?.displayName,
+      isRemind: showCalendarReminder, // Set isRemind based on the checkbox state
     };
   
     try {
       await addDoc(collection(db, "UserBookings"), bookingData);
       setShowSuccessMessage(true);
+      setShowSummaryPopup(false);
     } catch (error) {
       console.error("Error saving booking:", error);
       alert("Failed to save booking. Please try again.");
     }
   };
+  
+
 
   useEffect(() => {
     if (queryParams.has('numberOfAdults')) {
@@ -228,12 +252,12 @@ function HotelBooking() {
     <div className="booking-container flex mt-20 mb-20">
       {showSuccessMessage && <SuccessMessage navigate={navigate} />}
       {errorMessage && <ErrorMessage message={errorMessage} />}
-
+  
       <HotelDetails
         photoUrl={photoUrl || imageURL}
         description={hotel?.description || desc}
       />
-
+  
       <BookingForm
         hotelName={hotel?.hotelName || hotelName}
         address={hotel?.hotelAddress || address}
@@ -254,6 +278,24 @@ function HotelBooking() {
         isDateBooked={isDateBooked}
         today={today}
       />
+  
+      {showSummaryPopup && (
+        <SummaryPopup
+          bookingDetails={{
+            hotelName: hotel?.hotelName || hotelName,
+            checkInDate: startDate.toISOString(),
+            checkOutDate: endDate.toISOString(),
+            numberOfAdults,
+            numberOfChildren,
+            totalPrice,
+            bedType,
+          }}
+          onClose={() => setShowSummaryPopup(false)}
+          onConfirm={handleConfirmBooking}
+          showCalendarReminder={showCalendarReminder}
+          setShowCalendarReminder={setShowCalendarReminder}
+        />
+      )}
     </div>
   );
 }

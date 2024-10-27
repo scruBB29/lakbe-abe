@@ -41,6 +41,7 @@ function UserBookingsCardItem({ hotelbooked }) {
       setPhotoUrl(PhotoUrl);
     } catch (error) {
       console.error("Error fetching place photo:", error);
+      setPhotoUrl('/pampanga.jpg'); // Use default image if there's an error
     }
   };
 
@@ -59,7 +60,7 @@ function UserBookingsCardItem({ hotelbooked }) {
   return (
     <div className='hover:scale-105 transition-all'>
       <img 
-        src={photoUrl || '/placeholder.jpg'} 
+        src={photoUrl || '/pampanga.jpg'} 
         className="object-cover rounded-xl h-[220px] w-full" 
         alt={hotelbooked?.hotelName || "Placeholder"} 
       />

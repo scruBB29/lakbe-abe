@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/service/firebaseConfig";
-import { collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc, updateDoc } from "firebase/firestore";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import styles
 import './AdminBookings.css'; // Ensure your CSS file is imported
+import axios from "axios";
 
 function AdminBookings() {
   const [bookings, setBookings] = useState([]);
@@ -39,15 +40,100 @@ function AdminBookings() {
 
   const handleAcceptBooking = async (id) => {
     try {
+      // Update booking status to accepted
       await updateDoc(doc(db, "UserBookings", id), {
         isAccepted: true // Update the status to ACCEPTED
       });
+  
+      // Fetch the updated booking details
+      const bookingRef = doc(db, "UserBookings", id);
+      const bookingSnapshot = await getDoc(bookingRef);
+      
+      if (bookingSnapshot.exists()) {
+        const bookingData = bookingSnapshot.data();
+  
+        // Ensure the date strings are valid
+        const checkInDate = new Date(bookingData.checkInDate);
+        const checkOutDate = new Date(bookingData.checkOutDate);
+  
+        if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+          throw new Error("Invalid date format in booking data.");
+        }
+  
+        // Check if isRemind is true
+        if (bookingData.isRemind) {
+          // Fetch the user's email from the booking data
+          const userEmail = bookingData.userEmail;
+          if (!userEmail) {
+            throw new Error("User email not found in booking data.");
+          }
+  
+          // Fetch the access token from Firestore
+          const userDocRef = doc(db, "users", userEmail);
+          const userDoc = await getDoc(userDocRef);
+          if (!userDoc.exists()) {
+            throw new Error("User document not found.");
+          }
+  
+          const accessToken = userDoc.data().accessToken.googleAccessToken;
+          if (!accessToken) {
+            throw new Error("Access token not found. Please authenticate again.");
+          }
+  
+          // Create the Google Calendar event
+          await createGoogleCalendarEvent(bookingData, accessToken);
+        }
+      }
+  
       fetchBookings(); // Refresh the list after updating
     } catch (error) {
       console.error("Error updating booking status:", error);
       alert("Failed to update booking status. Please try again.");
     }
   };
+
+  const createGoogleCalendarEvent = async (bookingData, accessToken) => {
+    const eventDetails = {
+      summary: `Booking Confirmation for ${bookingData.fullName} at ${bookingData.hotelName}`,
+      location: bookingData.hotelName,
+      description: `Booking Details: Check-in: ${new Date(bookingData.checkInDate).toLocaleDateString()}, Check-out: ${new Date(bookingData.checkOutDate).toLocaleDateString()}`,
+      start: {
+        dateTime: new Date(bookingData.checkInDate).toISOString(),
+        timeZone: 'Asia/Manila',
+      },
+      end: {
+        dateTime: new Date(bookingData.checkOutDate).toISOString(),
+        timeZone: 'Asia/Manila',
+      },
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: 'email', minutes: 24 * 60 },
+          { method: 'popup', minutes: 24 * 60 },
+        ],
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        eventDetails,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      console.log("Event created successfully:", response.data);
+    } catch (error) {
+      console.error("Failed to create calendar event:", error.response?.data || error.message);
+      alert("Error creating calendar event: " + (error.response?.data?.error?.message || error.message));
+    }
+  };
+  
+
 
   const toggleActiveStatus = async (id, currentStatus) => {
     try {

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/service/firebaseConfig";
@@ -33,13 +33,27 @@ function Header() {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/calendar'); // Add this line
+  
     try {
       console.log("Attempting to sign in with Google...");
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log("User signed in:", user);
       
-      await handleUserProfile(user);
+      // Get the credential from the result
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const accessToken = credential.accessToken; // Access token for Google API
+  
+      // Ensure accessToken is not undefined
+      if (!accessToken) {
+        throw new Error("Access token is undefined. Please try again.");
+      }
+  
+      // Store the access token in local storage
+      localStorage.setItem("googleAccessToken", accessToken);
+  
+      await handleUserProfile(user, accessToken);
       setOpenDialog(false);
       window.location.reload();
     } catch (error) {
@@ -48,37 +62,54 @@ function Header() {
     }
   };
 
-  const handleUserProfile = async (user) => {
+  const handleUserProfile = async (user, accessToken) => {
     const userDocRef = doc(db, "users", user.email);
     const userDoc = await getDoc(userDocRef);
     
     if (!userDoc.exists()) {
       console.log("Creating new user document for:", user.uid);
-      await setDoc(userDocRef, {
-        email: user.email,
-        isAdmin: false, // Default to false, you can set this based on your logic
-        isHotel: false,
-        isRegular: true,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        userId: user.uid, // Include userId in the Firestore document
-        // Add any other custom fields you need
-      });
+      const userData = {
+        profile: {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          userId: user.uid, // Ensure userId is included
+          isAdmin:false,
+          isRegular:true,
+          isHotel:false
+        },
+        accessToken: {
+          googleAccessToken: accessToken,
+        },
+      };
+      await setDoc(userDocRef, userData);
       console.log("New user document created:", { 
         email: user.email, 
         displayName: user.displayName 
       });
     } else {
       console.log("User document already exists for:", user.uid);
+      const userData = {
+        profile: {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          userId: user.uid, // Ensure userId is included
+        },
+        accessToken: {
+          googleAccessToken: accessToken,
+        },
+      };
+      await setDoc(userDocRef, userData, { merge: true });
     }
     
     // Include userId in the user object before storing it in local storage
     const userWithAdmin = {
       ...user,
-      userId: userDoc.exists() ? userDoc.data().userId : user.uid, // Ensure userId is included
-      isAdmin: userDoc.exists() ? userDoc.data().isAdmin : false,
-      isHotel: userDoc.exists() ? userDoc.data().isHotel : false,
-      isRegular: userDoc.exists() ? userDoc.data().isRegular : false,
+      userId: userDoc.exists() ? userDoc.data().profile.userId : user.uid, // Ensure userId is included
+      isAdmin: userDoc.exists() ? userDoc.data().profile.isAdmin : false,
+      isHotel: userDoc.exists() ? userDoc.data().profile.isHotel : false,
+      isRegular: userDoc.exists() ? userDoc.data().profile.isRegular : true,
     };
     
     localStorage.setItem("user", JSON.stringify(userWithAdmin));
